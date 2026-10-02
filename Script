@@ -1,0 +1,482 @@
+--==================================================
+-- FOLSS CONTROL
+-- PERMANENT / NO EXPIRED
+-- 1 LocalScript
+-- StarterPlayer > StarterPlayerScripts
+--==================================================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local pg = player:WaitForChild("PlayerGui")
+
+--==================================================
+-- CONFIG
+--==================================================
+
+local PASSWORD = "AFRIANGANTENG6767"
+local MAX_ATTEMPTS = 5
+
+local BLACK = Color3.fromRGB(0,0,0)
+local WHITE = Color3.fromRGB(255,255,255)
+local GREEN = Color3.fromRGB(180,255,55)
+
+--==================================================
+-- HAPUS GUI LAMA
+--==================================================
+
+local old = pg:FindFirstChild("FolssControl")
+if old then
+	old:Destroy()
+end
+
+--==================================================
+-- MAIN GUI
+--==================================================
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "FolssControl"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.DisplayOrder = 999999
+gui.Parent = pg
+
+--==================================================
+-- LOADING
+--==================================================
+
+local loadingFrame = Instance.new("Frame")
+loadingFrame.Size = UDim2.fromOffset(280,150)
+loadingFrame.Position = UDim2.new(0.5,-140,0.5,-75)
+loadingFrame.BackgroundColor3 = Color3.fromRGB(15,15,15)
+loadingFrame.BorderSizePixel = 0
+loadingFrame.Parent = gui
+
+local loadingCorner = Instance.new("UICorner")
+loadingCorner.CornerRadius = UDim.new(0,16)
+loadingCorner.Parent = loadingFrame
+
+local loadingTitle = Instance.new("TextLabel")
+loadingTitle.Size = UDim2.new(1,0,0,45)
+loadingTitle.Position = UDim2.fromOffset(0,10)
+loadingTitle.BackgroundTransparency = 1
+loadingTitle.Text = "FOLSS CONTROL"
+loadingTitle.TextColor3 = WHITE
+loadingTitle.TextSize = 23
+loadingTitle.Font = Enum.Font.GothamBlack
+loadingTitle.Parent = loadingFrame
+
+local loadingText = Instance.new("TextLabel")
+loadingText.Size = UDim2.new(1,0,0,30)
+loadingText.Position = UDim2.fromOffset(0,55)
+loadingText.BackgroundTransparency = 1
+loadingText.Text = "Loading 1%"
+loadingText.TextColor3 = GREEN
+loadingText.TextSize = 18
+loadingText.Font = Enum.Font.GothamBold
+loadingText.Parent = loadingFrame
+
+local barBG = Instance.new("Frame")
+barBG.Size = UDim2.new(1,-40,0,16)
+barBG.Position = UDim2.fromOffset(20,100)
+barBG.BackgroundColor3 = Color3.fromRGB(45,45,45)
+barBG.BorderSizePixel = 0
+barBG.Parent = loadingFrame
+
+local barCorner = Instance.new("UICorner")
+barCorner.CornerRadius = UDim.new(1,0)
+barCorner.Parent = barBG
+
+local bar = Instance.new("Frame")
+bar.Size = UDim2.new(0,0,1,0)
+bar.BackgroundColor3 = GREEN
+bar.BorderSizePixel = 0
+bar.Parent = barBG
+
+local barCorner2 = Instance.new("UICorner")
+barCorner2.CornerRadius = UDim.new(1,0)
+barCorner2.Parent = bar
+
+-- 10 detik: 1% sampai 100%
+for i = 1,100 do
+	loadingText.Text = "Loading "..i.."%"
+	bar.Size = UDim2.new(i/100,0,1,0)
+	task.wait(0.1)
+end
+
+loadingFrame:Destroy()
+
+--==================================================
+-- PASSWORD FRAME
+--==================================================
+
+local passFrame = Instance.new("Frame")
+passFrame.Size = UDim2.fromOffset(300,190)
+passFrame.Position = UDim2.new(0.5,-150,0.5,-95)
+passFrame.BackgroundColor3 = Color3.fromRGB(15,15,15)
+passFrame.BorderSizePixel = 0
+passFrame.Parent = gui
+
+local passCorner = Instance.new("UICorner")
+passCorner.CornerRadius = UDim.new(0,16)
+passCorner.Parent = passFrame
+
+local passTitle = Instance.new("TextLabel")
+passTitle.Size = UDim2.new(1,-20,0,40)
+passTitle.Position = UDim2.fromOffset(10,10)
+passTitle.BackgroundTransparency = 1
+passTitle.Text = "MASUKKAN SANDI"
+passTitle.TextColor3 = WHITE
+passTitle.TextSize = 21
+passTitle.Font = Enum.Font.GothamBlack
+passTitle.Parent = passFrame
+
+local passInfo = Instance.new("TextLabel")
+passInfo.Size = UDim2.new(1,-20,0,25)
+passInfo.Position = UDim2.fromOffset(10,45)
+passInfo.BackgroundTransparency = 1
+passInfo.Text = "Sandi tidak membedakan huruf besar/kecil"
+passInfo.TextColor3 = Color3.fromRGB(180,180,180)
+passInfo.TextSize = 12
+passInfo.Font = Enum.Font.Gotham
+passInfo.Parent = passFrame
+
+local passBox = Instance.new("TextBox")
+passBox.Size = UDim2.new(1,-30,0,42)
+passBox.Position = UDim2.fromOffset(15,75)
+passBox.BackgroundColor3 = Color3.fromRGB(35,35,35)
+passBox.TextColor3 = WHITE
+passBox.PlaceholderColor3 = Color3.fromRGB(130,130,130)
+passBox.PlaceholderText = "Masukkan sandi..."
+passBox.Text = ""
+passBox.TextSize = 17
+passBox.Font = Enum.Font.Gotham
+passBox.ClearTextOnFocus = false
+passBox.Parent = passFrame
+
+local boxCorner = Instance.new("UICorner")
+boxCorner.CornerRadius = UDim.new(0,9)
+boxCorner.Parent = passBox
+
+local enterButton = Instance.new("TextButton")
+enterButton.Size = UDim2.new(1,-30,0,38)
+enterButton.Position = UDim2.fromOffset(15,130)
+enterButton.BackgroundColor3 = GREEN
+enterButton.Text = "MASUK"
+enterButton.TextColor3 = Color3.fromRGB(50,70,10)
+enterButton.TextSize = 17
+enterButton.Font = Enum.Font.GothamBlack
+enterButton.Parent = passFrame
+
+local enterCorner = Instance.new("UICorner")
+enterCorner.CornerRadius = UDim.new(0,9)
+enterCorner.Parent = enterButton
+
+--==================================================
+-- PASSWORD CHECK
+--==================================================
+
+local attempts = 0
+local unlocked = false
+
+local function checkPassword()
+
+	if unlocked then
+		return
+	end
+
+	local entered = string.lower(passBox.Text)
+	local correct = string.lower(PASSWORD)
+
+	if entered == correct then
+
+		unlocked = true
+		passFrame:Destroy()
+
+	else
+
+		attempts += 1
+		passBox.Text = ""
+
+		if attempts >= MAX_ATTEMPTS then
+
+			player:Kick(
+				"salah sandi 5 kali DM akun tiktok : vinzzz.storereal"
+			)
+
+			return
+		end
+
+		passTitle.Text =
+			"SANDI SALAH ("..attempts.."/"..MAX_ATTEMPTS..")"
+
+	end
+end
+
+enterButton.Activated:Connect(checkPassword)
+
+passBox.FocusLost:Connect(function(enterPressed)
+
+	if enterPressed then
+		checkPassword()
+	end
+
+end)
+
+--==================================================
+-- TUNGGU PASSWORD BENAR
+--==================================================
+
+while not unlocked do
+	task.wait()
+end
+
+--==================================================
+-- TOMBOL HIJAU BUKA / TUTUP
+--==================================================
+
+local toggle = Instance.new("TextButton")
+toggle.Name = "Toggle"
+toggle.Size = UDim2.fromOffset(75,65)
+toggle.Position = UDim2.new(1,-95,0,55)
+toggle.BackgroundColor3 = GREEN
+toggle.Text = "+"
+toggle.TextColor3 = Color3.fromRGB(70,90,20)
+toggle.TextSize = 42
+toggle.Font = Enum.Font.GothamBlack
+toggle.AutoButtonColor = false
+toggle.Parent = gui
+
+local tc = Instance.new("UICorner")
+tc.CornerRadius = UDim.new(0,12)
+tc.Parent = toggle
+
+local ts = Instance.new("UIStroke")
+ts.Color = Color3.fromRGB(205,255,100)
+ts.Thickness = 4
+ts.Parent = toggle
+
+--==================================================
+-- CONTROLS
+--==================================================
+
+local controls = Instance.new("Frame")
+controls.Name = "Controls"
+controls.Size = UDim2.fromScale(1,1)
+controls.BackgroundTransparency = 1
+controls.Visible = true
+controls.Parent = gui
+
+--==================================================
+-- D-PAD KECIL
+--==================================================
+
+local dpad = Instance.new("Frame")
+dpad.Name = "DPad"
+dpad.Size = UDim2.fromOffset(180,165)
+dpad.Position = UDim2.new(0,35,1,-190)
+dpad.BackgroundTransparency = 1
+dpad.Parent = controls
+
+local function makeButton(name,text,x,y,w,h)
+
+	local b = Instance.new("TextButton")
+	b.Name = name
+	b.Size = UDim2.fromOffset(w,h)
+	b.Position = UDim2.fromOffset(x,y)
+	b.BackgroundColor3 = BLACK
+	b.BackgroundTransparency = 0.05
+	b.Text = text
+	b.TextColor3 = WHITE
+	b.TextSize = 32
+	b.Font = Enum.Font.GothamBlack
+	b.AutoButtonColor = false
+	b.Parent = dpad
+
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0,12)
+	c.Parent = b
+
+	return b
+end
+
+local up = makeButton("Up","↑",55,0,65,75)
+local left = makeButton("Left","←",0,50,80,65)
+local right = makeButton("Right","→",100,50,80,65)
+local down = makeButton("Down","↓",55,90,65,75)
+
+--==================================================
+-- GERAK
+--==================================================
+
+local moving = {
+	Up = false,
+	Down = false,
+	Left = false,
+	Right = false
+}
+
+local buttons = {
+	Up = up,
+	Down = down,
+	Left = left,
+	Right = right
+}
+
+local function setMove(name,state)
+
+	moving[name] = state
+
+	local b = buttons[name]
+
+	if b then
+		b.BackgroundColor3 =
+			state
+			and Color3.fromRGB(45,45,45)
+			or BLACK
+	end
+end
+
+for name,b in pairs(buttons) do
+
+	b.InputBegan:Connect(function(input)
+
+		if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseButton1 then
+
+			setMove(name,true)
+		end
+
+	end)
+
+	b.InputEnded:Connect(function(input)
+
+		if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseButton1 then
+
+			setMove(name,false)
+		end
+
+	end)
+
+end
+
+--==================================================
+-- PLAYER MOVEMENT
+--==================================================
+
+RunService.RenderStepped:Connect(function()
+
+	if not gui.Parent then
+		return
+	end
+
+	if not controls.Visible then
+		return
+	end
+
+	local character = player.Character
+	if not character then return end
+
+	local humanoid =
+		character:FindFirstChildOfClass("Humanoid")
+
+	if not humanoid then return end
+
+	local direction = Vector3.zero
+
+	if moving.Up then
+		direction += Vector3.new(0,0,-1)
+	end
+
+	if moving.Down then
+		direction += Vector3.new(0,0,1)
+	end
+
+	if moving.Left then
+		direction += Vector3.new(-1,0,0)
+	end
+
+	if moving.Right then
+		direction += Vector3.new(1,0,0)
+	end
+
+	if direction.Magnitude > 0 then
+
+		local camera = workspace.CurrentCamera
+		if not camera then return end
+
+		local forward = Vector3.new(
+			camera.CFrame.LookVector.X,
+			0,
+			camera.CFrame.LookVector.Z
+		)
+
+		local rightVector = Vector3.new(
+			camera.CFrame.RightVector.X,
+			0,
+			camera.CFrame.RightVector.Z
+		)
+
+		if forward.Magnitude > 0 then
+			forward = forward.Unit
+		end
+
+		if rightVector.Magnitude > 0 then
+			rightVector = rightVector.Unit
+		end
+
+		local movement =
+			forward * -direction.Z
+			+ rightVector * direction.X
+
+		if movement.Magnitude > 0 then
+			humanoid:Move(movement.Unit,false)
+		end
+
+	else
+		humanoid:Move(Vector3.zero,false)
+	end
+
+end)
+
+--==================================================
+-- BUKA / TUTUP
+--==================================================
+
+toggle.Activated:Connect(function()
+
+	controls.Visible = not controls.Visible
+
+	if controls.Visible then
+
+		toggle.Text = "−"
+
+	else
+
+		toggle.Text = "+"
+
+		for name in pairs(moving) do
+			setMove(name,false)
+		end
+
+	end
+
+end)
+
+--==================================================
+-- RESPAWN
+-- GUI TETAP ADA
+--==================================================
+
+player.CharacterAdded:Connect(function()
+
+	for name in pairs(moving) do
+		setMove(name,false)
+	end
+
+	controls.Visible = true
+	toggle.Text = "−"
+
+end)
